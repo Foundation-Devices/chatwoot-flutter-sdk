@@ -64,10 +64,6 @@ void main() {
     when(mockService.connection).thenReturn(mockWebSocketChannel);
 
     mockProviderContainer = ProviderContainer();
-    mockProviderContainer.updateOverrides([
-      chatwootClientServiceProvider
-          .overrideWithProvider((ref, param) => mockService)
-    ]);
     ChatwootClient.providerContainerMap.update(
         testClientInstanceKey, (_) => mockProviderContainer,
         ifAbsent: () => mockProviderContainer);
