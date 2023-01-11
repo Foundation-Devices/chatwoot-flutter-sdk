@@ -60,6 +60,8 @@ class ChatwootMessage extends Equatable {
   ///checks if message belongs to contact making the request
   bool get isMine => messageType == 0;
 
+  bool get isBot => messageType == 3;
+
   ChatwootMessage(
       {required this.id,
       required this.content,

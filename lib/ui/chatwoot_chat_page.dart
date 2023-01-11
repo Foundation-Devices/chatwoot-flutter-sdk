@@ -296,15 +296,23 @@ class _ChatwootChatState extends State<ChatwootChat> {
     if (avatarUrl?.contains("?d=404") ?? false) {
       avatarUrl = null;
     }
+    types.User author = message.isMine
+        ? _user
+        : types.User(
+            id: message.sender?.id.toString() ?? idGen.v4(),
+            firstName: message.sender?.name,
+            imageUrl: avatarUrl,
+          );
+    if (message.isBot) {
+      author = types.User(
+          id: "bot-id-94ubxgsnp",
+          firstName: "Bot",
+          imageUrl:
+              "https://d2cbg94ubxgsnp.cloudfront.net/Pictures/480x270//9/9/3/512993_shutterstock_715962319converted_920340.png");
+    }
     return types.TextMessage(
         id: echoId ?? message.id.toString(),
-        author: message.isMine
-            ? _user
-            : types.User(
-                id: message.sender?.id.toString() ?? idGen.v4(),
-                firstName: message.sender?.name,
-                imageUrl: avatarUrl,
-              ),
+        author: author,
         text: message.content ?? "",
         status: types.Status.seen,
         createdAt: DateTime.parse(message.createdAt).millisecondsSinceEpoch);
@@ -404,61 +412,66 @@ class _ChatwootChatState extends State<ChatwootChat> {
   @override
   Widget build(BuildContext context) {
     final horizontalPadding = widget.isPresentedInDialog ? 8.0 : 16.0;
-    return Scaffold(
-      appBar: widget.appBar,
-      backgroundColor: widget.theme.backgroundColor,
-      body: Column(
-        children: [
-          Flexible(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: horizontalPadding, right: horizontalPadding),
-              child: Chat(
-                messages: _messages,
-                onMessageTap: (context, p1) {
-                  _handleMessageTap(p1);
-                },
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                user: _user,
-                onEndReached: widget.onEndReached,
-                onEndReachedThreshold: widget.onEndReachedThreshold,
-                onMessageLongPress: (context, p1) {
-                  widget.onMessageLongPress?.call(p1);
-                },
-                // onTextChanged: widget.onTextChanged,
-                showUserAvatars: widget.showUserAvatars,
-                showUserNames: widget.showUserNames,
-                timeFormat: widget.timeFormat ?? DateFormat.Hm(),
-                dateFormat: widget.timeFormat ?? DateFormat("EEEE MMMM d"),
-                theme: widget.theme,
-                l10n: widget.l10n,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/logo_grey.png",
-                  package: 'chatwoot_client_sdk',
-                  width: 15,
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "Powered by Chatwoot",
-                    style: TextStyle(color: Colors.black45, fontSize: 12),
+    return Stack(
+      children: [
+        widget.theme.chatBackground ?? Container(),
+        Scaffold(
+          appBar: widget.appBar,
+          backgroundColor: widget.theme.backgroundColor,
+          body: Column(
+            children: [
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: horizontalPadding, right: horizontalPadding),
+                  child: Chat(
+                    messages: _messages,
+                    onMessageTap: (context, p1) {
+                      _handleMessageTap(p1);
+                    },
+                    onPreviewDataFetched: _handlePreviewDataFetched,
+                    onSendPressed: _handleSendPressed,
+                    user: _user,
+                    onEndReached: widget.onEndReached,
+                    onEndReachedThreshold: widget.onEndReachedThreshold,
+                    onMessageLongPress: (context, p1) {
+                      widget.onMessageLongPress?.call(p1);
+                    },
+                    // onTextChanged: widget.onTextChanged,
+                    showUserAvatars: widget.showUserAvatars,
+                    showUserNames: widget.showUserNames,
+                    timeFormat: widget.timeFormat ?? DateFormat.Hm(),
+                    dateFormat: widget.timeFormat ?? DateFormat("EEEE MMMM d"),
+                    theme: widget.theme,
+                    l10n: widget.l10n,
                   ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/logo_grey.png",
+                      package: 'chatwoot_client_sdk',
+                      width: 15,
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "Powered by Chatwoot",
+                        style: TextStyle(color: Colors.black45, fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 
