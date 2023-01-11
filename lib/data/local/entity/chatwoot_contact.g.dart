@@ -62,7 +62,7 @@ ChatwootContact _$ChatwootContactFromJson(Map<String, dynamic> json) {
     contactIdentifier: json['source_id'] as String?,
     pubsubToken: json['pubsub_token'] as String?,
     name: json['name'] as String,
-    email: json['email'] as String,
+    email: json['email'] as String?,
   );
 }
 
