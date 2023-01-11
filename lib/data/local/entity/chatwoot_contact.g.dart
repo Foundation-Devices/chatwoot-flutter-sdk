@@ -21,7 +21,7 @@ class ChatwootContactAdapter extends TypeAdapter<ChatwootContact> {
       contactIdentifier: fields[1] as String?,
       pubsubToken: fields[2] as String?,
       name: fields[3] as String,
-      email: fields[4] as String,
+      email: fields[4] as String?,
     );
   }
 
